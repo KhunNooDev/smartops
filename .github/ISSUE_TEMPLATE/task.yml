@@ -1,0 +1,51 @@
+name: Development task
+description: Plan a SmartOps feature, chore, or development task.
+title: ""
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the work without an `OPS-xxx` prefix. SmartOps assigns that ID automatically after creation.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome should this work deliver?
+      placeholder: Add a concise, observable outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included in this work?
+      placeholder: List files, behavior, or systems this work covers.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What proves this work is complete?
+      placeholder: |
+        - [ ] Criterion one
+        - [ ] Criterion two
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of Scope
+      description: What should this work explicitly not change?
+      placeholder: List exclusions, or write "None".
+    validations:
+      required: true
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: Technical Notes
+      description: Optional implementation notes, dependencies, constraints, or links.
+    validations:
+      required: false

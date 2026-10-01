@@ -1,0 +1,61 @@
+name: Assign SmartOps issue ID
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+# Every run shares one queue. This prevents two newly opened issues from
+# selecting the same next ID while their workflows overlap.
+concurrency:
+  group: smartops-issue-id-assignment
+  cancel-in-progress: false
+
+jobs:
+  assign-id:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign next OPS ID
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const idPattern = /^OPS-(\d+):\s/;
+
+            // Re-runs or manually prefixed issues stay unchanged.
+            if (idPattern.test(issue.title)) {
+              core.info(`Issue #${issue.number} already has a SmartOps ID.`);
+              return;
+            }
+
+            const existingIssues = await github.paginate(
+              github.rest.issues.listForRepo,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'all',
+                per_page: 100,
+              },
+            );
+
+            const highestAssignedId = existingIssues
+              .filter((candidate) => !candidate.pull_request)
+              .map((candidate) => {
+                const match = candidate.title.match(idPattern);
+                return match ? Number.parseInt(match[1], 10) : 0;
+              })
+              .reduce((highest, id) => Math.max(highest, id), 0);
+
+            const nextId = String(highestAssignedId + 1).padStart(3, '0');
+            const title = `OPS-${nextId}: ${issue.title}`;
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              title,
+            });
+
+            core.info(`Assigned OPS-${nextId} to issue #${issue.number}.`);
