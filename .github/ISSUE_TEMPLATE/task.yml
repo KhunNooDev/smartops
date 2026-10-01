@@ -1,6 +1,5 @@
 name: Development task
 description: Plan a SmartOps feature, chore, or development task.
-title: ""
 labels:
   - enhancement
 body:
