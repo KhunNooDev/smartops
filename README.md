@@ -20,3 +20,14 @@ In a second terminal:
     bun run dev
 
 Open http://localhost:3000.
+
+## GitHub workflow
+
+Create development work with the **Development task** Issue Form. Do not add an
+`OPS-xxx` prefix: GitHub automatically adds the next available SmartOps ID after
+the Issue opens. The ID is independent from the GitHub Issue number and remains
+unchanged if the workflow runs again.
+
+Pull requests start with the repository template. In **Related Issue**, use the
+native Issue number, for example `Closes #3`, so GitHub closes the related Issue
+when the pull request merges.
