@@ -64,4 +64,4 @@ jobs:
               title,
             });
 
-            core.info(`Assigned OPS-${nextId} to issue #${issue.number}.`);
+            core.info(`Assigned OPS-${nextId} to issue #${currentIssue.number}.`);
