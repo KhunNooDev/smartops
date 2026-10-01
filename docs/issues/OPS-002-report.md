@@ -53,14 +53,16 @@ GitHub closes that Issue when the pull request merges.
 
 ## ID assignment behavior
 
-The workflow runs only for newly opened Issues and has only `issues: write`
-permission. All runs share one GitHub Actions concurrency group, so a later
-Issue waits while an earlier Issue selects and writes its ID. Each run reads all
+The workflow runs for newly opened Issues and has only `issues: write`
+permission. All runs share one GitHub Actions concurrency queue, so later
+Issues wait while earlier Issues select and write IDs. The queue supports up to
+100 waiting runs; GitHub cancels runs beyond that limit. Each run reads all
 existing Issues, ignores Pull Requests, finds the largest valid `OPS-<number>:`
 prefix, then assigns the next number with at least three digits.
 
 If an Issue already has a valid prefix such as `OPS-005: Add device management`,
-the workflow leaves it unchanged. This makes repeated runs safe.
+the workflow leaves it unchanged. A rerun fetches current Issue state first,
+rather than trusting its original event payload, so repeated runs are safe.
 
 ## Verify after merge to `main`
 
